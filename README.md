@@ -9,33 +9,38 @@ Normally `page.tsx` -> `layout.tsx` is executed in this order, but with this lib
 
 - app/context.tsx
 
-```tsx
-import { createContext } from "next-approuter-context";
+Name the context so that it can be identified when retrieving data
 
-export const context = createContext<{ text: string; color: string }>();
+```tsx
+import { createMixContext } from "next-approuter-context";
+
+export type ContextType1 = { text: string; color: string };
+export const context1 = createMixContext<ContextType1>("context1");
+
+export type ContextType2 = number;
+export const context2 = createMixContext<ContextType2>("context2");
 ```
 
 - app/layout.tsx
 
+Set data in Provider
+
 ```tsx
-import { context } from "./context";
+import { context1, context2 } from "./context";
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  // Without using Provider, values can also be set in the following ways
-  // context().set(VALUE)
-
   return (
     <html lang="en">
       <body>
-        <context.Provider
+        <context1.Provider
           value={{ text: "Send colors and text from Layout", color: "red" }}
         >
-          {children}
-        </context.Provider>
+          <context2.Provider value={123456}>{children}</context2.Provider>
+        </context1.Provider>
       </body>
     </html>
   );
@@ -44,16 +49,68 @@ export default function RootLayout({
 
 - app/page.tsx
 
+Place Server/Client components
+
 ```tsx
-import { context } from "./context";
-import { useContext } from "next-approuter-context";
+import { Client } from "./client";
+import { Server } from "./server";
 
 const Page = () => {
-  const { text, color } = useContext(context);
-  // If the component is async, it should be written as follows
-  // const { text, color } = async getContext(context);
-  return <div style={{ color }}>Page: {text}</div>;
+  return (
+    <>
+      <Server />
+      <Client />
+    </>
+  );
 };
 
 export default Page;
+```
+
+- app/server.tsx
+
+Server component handles retrieving values from context
+
+```tsx
+"use server";
+
+import { getMixContext, useMixContext } from "next-approuter-context";
+import type { ContextType1, ContextType2 } from "./context";
+
+export const Server = () => {
+  // If the component is async, it should be written as follows
+  // const { text, color } = await getMixContext<ContextType1>();
+  const { text, color } = useMixContext<ContextType1>("context1");
+  const value = useMixContext<ContextType2>("context2");
+  return (
+    <>
+      <div style={{ color }}>
+        Server: {text} - {value}
+      </div>
+    </>
+  );
+};
+```
+
+- app/client.tsx
+
+Client component handles retrieving values from context
+
+```tsx
+"use client";
+
+import { useMixContext } from "next-approuter-context";
+import type { ContextType1, ContextType2 } from "./context";
+
+export const Client = () => {
+  const { text, color } = useMixContext<ContextType1>("context1");
+  const value = useMixContext<ContextType2>("context2");
+  return (
+    <>
+      <div style={{ color }}>
+        Client: {text} - {value}
+      </div>
+    </>
+  );
+};
 ```

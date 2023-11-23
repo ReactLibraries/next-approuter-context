@@ -1,22 +1,18 @@
-import { ReactNode, cache, use } from "react";
+export * from "./server.js";
+export * from "./client.js";
 
-export const createContext = <T>() => {
-  const context = cache(() => {
-    let resolve: (value: T) => void;
-    const promise = new Promise<T>((r) => (resolve = r));
-    return {
-      set: (value: T) => resolve(value),
-      get: () => promise,
-    };
-  });
-  const Provider = ({ children, value }: { children: ReactNode; value: T }) => {
-    context().set(value);
-    return children;
-  };
-  return Object.assign(context, { Provider });
+import React, { use } from "react";
+import { useClientContext } from "./client";
+import { context } from "./server";
+
+export const getComponentType = () =>
+  !React["useState"]
+    ? "Server"
+    : React["createServerContext"] || !React["useOptimistic"]
+    ? "Pages"
+    : "Client";
+
+export const useMixContext = <T>(name: string = "") => {
+  if (getComponentType() === "Server") return use(context().get<T>(name));
+  return useClientContext<T>(name);
 };
-
-export const getContext = <T>(context: ReturnType<typeof createContext<T>>) =>
-  context().get();
-export const useContext = <T>(context: ReturnType<typeof createContext<T>>) =>
-  use(context().get());
