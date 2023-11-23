@@ -43,7 +43,7 @@ export default function RootLayout({
 }
 ```
 
-- app/pages.tsx
+- app/page.tsx
 
 ```tsx
 import { context } from "context";
