@@ -7,7 +7,14 @@ Contexts cannot be retrieved from ServerActions functions.
 
 Normally `page.tsx` -> `layout.tsx` is executed in this order, but with this library `layout.tsx` -> `page.tsx` will be executed in this order.
 
-- app/context.tsx
+# Sample
+
+- GitHub  
+   https://github.com/SoraKumo001/next-approuter-context-test
+- Vercel  
+  https://next-approuter-context-test.vercel.app/
+
+## app/context.tsx
 
 Name the context so that it can be identified when retrieving data
 
@@ -21,7 +28,7 @@ export type ContextType2 = number;
 export const context2 = createMixContext<ContextType2>("context2");
 ```
 
-- app/layout.tsx
+## app/layout.tsx
 
 Set data in Provider
 
@@ -47,7 +54,7 @@ export default function RootLayout({
 }
 ```
 
-- app/page.tsx
+## app/page.tsx
 
 Place Server/Client components
 
@@ -67,7 +74,7 @@ const Page = () => {
 export default Page;
 ```
 
-- app/server.tsx
+## app/server.tsx
 
 Server component handles retrieving values from context
 
@@ -92,7 +99,7 @@ export const Server = () => {
 };
 ```
 
-- app/client.tsx
+## app/client.tsx
 
 Client component handles retrieving values from context
 
