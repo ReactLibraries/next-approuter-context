@@ -1,4 +1,4 @@
-# next-server-context
+# next-approuter-context
 
 Server component of Next.js' AppRouter, which provides a ContextAPI-like mechanism.
 
@@ -10,7 +10,7 @@ Normally `page.tsx` -> `layout.tsx` is executed in this order, but with this lib
 - app/context.tsx
 
 ```tsx
-import { createContext } from "next-server-context";
+import { createContext } from "next-approuter-context";
 
 export const context = createContext<{ text: string; color: string }>();
 ```
@@ -18,8 +18,7 @@ export const context = createContext<{ text: string; color: string }>();
 - app/layout.tsx
 
 ```tsx
-import React from "react";
-import { context } from "context";
+import { context } from "./context";
 
 export default function RootLayout({
   children,
@@ -46,8 +45,8 @@ export default function RootLayout({
 - app/page.tsx
 
 ```tsx
-import { context } from "context";
-import { useContext } from "next-server-context";
+import { context } from "./context";
+import { useContext } from "next-approuter-context";
 
 const Page = () => {
   const { text, color } = useContext(context);

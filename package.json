@@ -1,6 +1,6 @@
 {
-  "name": "next-server-context",
-  "version": "0.0.1",
+  "name": "next-approuter-context",
+  "version": "0.0.2",
   "main": "./dist/cjs/index.js",
   "types": "./dist/cjs/index.d.ts",
   "exports": {
@@ -29,5 +29,11 @@
     "rimraf": "^5.0.5",
     "typescript": "^5.3.2"
   },
-  "repository": "https://github.com/ReactLibraries/next-server-context"
+  "repository": "https://github.com/ReactLibraries/next-server-context",
+  "keywords": [
+    "next.js",
+    "react",
+    "context",
+    "AppRouter"
+  ]
 }
