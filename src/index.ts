@@ -23,5 +23,5 @@ export const createMixContext = <T>(name: string) => {
     getComponentType() === "Server"
       ? createMixServerContext<T>(name)
       : { name };
-  return context as typeof context & { type: T };
+  return context as ReturnType<typeof createMixServerContext<T>> & { type: T };
 };
