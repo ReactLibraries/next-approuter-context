@@ -1,5 +1,5 @@
 "use server";
-import React, { ReactNode, cache } from "react";
+import { ReactNode, cache } from "react";
 import { ClientProvider } from "./client.js";
 
 export const context = cache(() => {
@@ -29,16 +29,21 @@ export const context = cache(() => {
   };
 });
 
-export const createMixContext = <T,>(name: string = "") => {
+export const createMixServerContext = <T,>(name: string = "") => {
   const Provider = ({ children, value }: { children: ReactNode; value: T }) => {
     context().set(name, value);
     return (
-      <ClientProvider name={name} value={value as never}>
+      <ClientProvider name={name} value={value}>
         {children}
       </ClientProvider>
     );
   };
-  return { Provider, get: () => context().get(name) };
+  const result = {
+    Provider,
+    get: () => context().get<T>(name),
+    name,
+  };
+  return result;
 };
 
 export const getMixContext = <T,>(name: string = "") => context().get<T>(name);
